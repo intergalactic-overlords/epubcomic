@@ -1,2 +1,11 @@
+# testing directories
+#####################
+
 comics/
 comics_2/
+
+# temporary directories
+#######################
+
+.tmp/
+tpm/
