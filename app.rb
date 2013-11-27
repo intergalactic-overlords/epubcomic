@@ -1,9 +1,15 @@
 require 'fileutils'
 require 'zlib'
 require 'erb'
-#require './app'
 
 class App
+  @title = 'test-title'
+  @language = 'en'
+  @vp_width = '100%'
+  @vp_height = '100%'
+  
+  
+  
   # create (hidden) temporary folder
   tmp_dir = 'tmp'
   unless File.exists?(tmp_dir) && File.directory?(tmp_dir)
@@ -46,7 +52,7 @@ class App
           source = tmp_dir + '/working/' + that_file
           destination = tmp_dir + '/new/OPS/images/' + that_file
           FileUtils.mv source, destination
-          images.push({'image_name' => that_file, 'image_alt' => ''})
+          images.push({:image_name => that_file, :image_alt => ''})
         end
       end
       
@@ -56,9 +62,14 @@ class App
       # create custom files and add to 'new' folder
       
       # xhtml
-      #images.foreach do |image|
-      #  renderer = ERB.new('page.xhtml')
-      #end
+      images.each do |image|
+        template_xhtml = File.open('./templates/OPS/xhtml/page.xhtml.erb', 'r').read
+        renderer = ERB.new(template_xhtml)
+        filename = image[:image_name].chomp "jpg"
+        filename = tmp_dir + '/new/OPS/xhtml/' + filename + "xhtml"
+        File.open(filename, 'w+') { |file| file.write(renderer.result(binding)) }
+        #puts renderer.result(binding)
+      end
       
       # css
       # toc
