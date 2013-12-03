@@ -11,19 +11,16 @@
     </header>
     <nav epub:type="toc" id="toc">
       <ol>
-        <li epub:type="chapter" id="toc-01">
-          <a href="p01.xhtml">ハルコさんの彼氏/Haruko San No Kareshi</a>
-        </li>
-        <li class="about" id="toc-about">
-          <a href="AboutThisDocument.xhtml">この文書について/About this document</a>
+        <li epub:type="chapter" id="toc-1">
+          <a href="p1.xhtml"><%= @title %></a>
         </li>
       </ol>
     </nav>
     <nav epub:type="page-list">
       <ol>
-        <% @pages.each do |page, index| %>
+        <% pages.to_enum.with_index(1).each do |page, index| %>
         <li>
-          <a href="<%= page.url %>">1</a>
+          <a href="<%= page[:name] %>"><%= index %></a>
         </li>
         <% end %>
       </ol>

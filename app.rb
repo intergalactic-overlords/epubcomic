@@ -1,9 +1,21 @@
 require 'fileutils'
-require 'zlib'
+require 'zip'
 require 'erb'
 
+#Module Toggle(a, b)
+#  def toggle (a, b)
+#    if x == a
+#      x = b
+#    elsif x == b
+#      x = a
+#    end
+#  end
+#end
+
 class App
+  @ltr = true
   @title = 'test-title'
+  @author = 'test-author'
   @language = 'en'
   @vp_width = '100%'
   @vp_height = '100%'
@@ -49,10 +61,19 @@ class App
       Dir.foreach tmp_dir + '/working' do |that_file|
         file_types = ['.png', '.jpg', '.jpeg']
         if file_types.include? File.extname(that_file)
+          image = {:name => that_file}
+          image[:alt] = ""
+          image[:ext] = File.extname(that_file)
+          type = File.extname(that_file)
+          type[0] = ''
+          if type == 'jpg'
+            type = 'jpeg'
+          end
+          image[:type] = type
           source = tmp_dir + '/working/' + that_file
           destination = tmp_dir + '/new/OPS/images/' + that_file
           FileUtils.mv source, destination
-          images.push({:image_name => that_file, :image_alt => ''})
+          images.push(image)
         end
       end
       
@@ -60,22 +81,64 @@ class App
       FileUtils.cp 'templates/mimetype', tmp_dir + '/new/mimetype'
             
       # create custom files and add to 'new' folder
+      pages = Array.new
       
       # xhtml
+      @next_spread = 'page-spread-right'
+      if not @ltr
+        @next_spread = 'page-spread-left'
+      end
+      
       images.each do |image|
-        template_xhtml = File.open('./templates/OPS/xhtml/page.xhtml.erb', 'r').read
-        renderer = ERB.new(template_xhtml)
-        filename = image[:image_name].chomp "jpg"
-        filename = tmp_dir + '/new/OPS/xhtml/' + filename + "xhtml"
-        File.open(filename, 'w+') { |file| file.write(renderer.result(binding)) }
+        page_xhtml = File.open('./templates/OPS/xhtml/page.xhtml.erb', 'r').read
+        page_renderer = ERB.new(page_xhtml)
+        pagename = 'p' + (image[:name].chomp "jpg") + "xhtml"
+        page = {:name => pagename}
+        page[:properties] = @next_spread
+        if @next_spread == 'page-spread-right'
+          @next_spread = 'page-spread-left'
+        elsif @next_spread == 'page-spread-left'
+          @next_spread = 'page-spread-right'
+        end
+        
+        pages.push(page)
+        path = tmp_dir + '/new/OPS/xhtml/' + pagename
+        File.open(path, 'w+') { |file| file.write(page_renderer.result(binding)) }
         #puts renderer.result(binding)
       end
       
-      # css
       # toc
+      toc_xhtml = File.open('./templates/OPS/xhtml/toc.xhtml.erb', 'r').read
+      toc_ncx = File.open('./templates/OPS/xhtml/toc.ncx.erb', 'r').read
+      toc_xhtml_renderer = ERB.new(toc_xhtml)
+      toc_ncx_renderer = ERB.new(toc_ncx)
+      path_toc_xhtml = tmp_dir + '/new/OPS/xhtml/toc.xhtml'
+      path_toc_ncx = tmp_dir + '/new/OPS/xhtml/toc.ncx'
+      File.open(path_toc_xhtml, 'w+') { |file| file.write(toc_xhtml_renderer.result(binding)) }
+      File.open(path_toc_ncx, 'w+') { |file| file.write(toc_ncx_renderer.result(binding)) }
+      
+      #package.opf
+      package_opf = File.open('./templates/OPS/package.opf.erb', 'r').read
+      package_opf_renderer = ERB.new(package_opf)
+      path_package_opf = tmp_dir + '/new/OPS/package.opf'
+      File.open(path_package_opf, 'w+') { |file| file.write(package_opf_renderer.result(binding)) }
+      
+      # css
+      
+      # META-INF/container.xml
+      container_xml = File.open('./templates/META-INF/container.xml', 'r').read
+      path_container_xml = tmp_dir + '/new/META-INF/container.xml'
+      File.open(path_container_xml, 'w+') { |file| file.write(container_xml) }
       
       # zip and rename epub
+      directory = tmp_dir + '/new/'
+      zipfile_name = tmp_dir + '/test.epub'
       
+      Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
+        Dir[File.join(directory, '**', '**')].each do |file|
+          zipfile.add(file.sub(directory, ''), file)
+        end
+      end
       # move epub to new folder
       
       # clean up working files

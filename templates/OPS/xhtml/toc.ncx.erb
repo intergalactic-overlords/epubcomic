@@ -8,24 +8,18 @@
     <ncx:meta name="dtb:maxPageNumber" content="0"/>
   </ncx:head>
   <ncx:docTitle>
-    <ncx:text><%= title =></ncx:text>
+    <ncx:text><%= @title %></ncx:text>
   </ncx:docTitle>
   <ncx:docAuthor>
-    <ncx:text><%= author =></ncx:text>
+    <ncx:text><%= @author %></ncx:text>
   </ncx:docAuthor>
   <ncx:navMap>
-    <ncx:navPoint id="p01" playOrder="1">
+    <ncx:navPoint id="p1" playOrder="1">
       <ncx:navLabel>
-        <ncx:text>ハルコさんの彼氏/Haruko San No Kareshi</ncx:text>
+        <ncx:text><%= @title %></ncx:text>
       </ncx:navLabel>
-      <ncx:content src="p01.xhtml"/>
+      <ncx:content src="p1.xhtml"/>
     </ncx:navPoint>
 
-    <ncx:navPoint id="about" playOrder="2">
-      <ncx:navLabel>
-        <ncx:text>この文書について/About this document</ncx:text>
-      </ncx:navLabel>
-      <ncx:content src="AboutThisDocument.xhtml"/>
-    </ncx:navPoint>
   </ncx:navMap>
 </ncx:ncx>
