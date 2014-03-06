@@ -4,7 +4,7 @@
   unique-identifier="ootuya-id">
   <metadata xmlns:opf="http://www.idpf.org/2007/opf" xmlns:dc="http://purl.org/dc/elements/1.1/"
     xmlns:dcterms="http://purl.org/dc/terms/">
-    
+
     <dc:identifier id="ootuya-id">urn:uuid:A649F639-6C1F-1014-8CC3-F813564D7508</dc:identifier>
     <dc:title><%= @title %></dc:title>
     <dc:language>ja-jp</dc:language>
@@ -17,11 +17,11 @@
     <item id="default-style" href="css/default.css" media-type="text/css"/>
     <item id="en-style" href="css/en.css" media-type="text/css"/>
     <item id="ja-jp-style" href="css/ja-jp.css" media-type="text/css"/>
-    
+
     <% images.to_enum.with_index(1).each do |image, index| %>
-      <item id="j<%= index %>" href="<%= image[:name] %>" media-type="image/<%= image[:type] %>" />
+      <item id="j<%= index %>" href="images/<%= image[:name] %>" media-type="image/<%= image[:type] %>" />
     <% end %>
-    
+
     <item id="toc" properties="nav" href="xhtml/toc.xhtml" media-type="application/xhtml+xml"/>
     <% pages.to_enum.with_index(1).each do |page, index| %>
       <item id="p<%= index %>" href="xhtml/<%= page[:name] %>" media-type="application/xhtml+xml"/>

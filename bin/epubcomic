@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+
+require 'epubcomic'
+puts Epubcomic.convert(ARGV[0])

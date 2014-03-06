@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xml="http://www.w3.org/XML/1998/namespace" 
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xml="http://www.w3.org/XML/1998/namespace"
   xmlns:epub="http://www.idpf.org/2007/ops"
   xml:lang="<%= @language %>">
   <head>
     <title><%= @title %></title>
-    <meta name="viewport" content="width=<%= @vp_width %>, height=<%= @vp_height %>"/> 
+    <meta name="viewport" content="width=<%= @vp_width %>, height=<%= @vp_height %>"/>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
   </head>
   <body epub:type="bodymatter">
-    <img src="../images/<%= image[:name] %>" alt="<%= image[:alt] %>"/>
+    <div class="page-img">
+      <img src="../images/<%= image[:name] %>" alt="<%= image[:alt] %>"/>
+    </div>
   </body>
 </html>
